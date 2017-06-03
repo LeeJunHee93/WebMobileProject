@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/titletxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="15pt"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginTop="20pt"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/timetxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#000000"/>
+
+            <TextView
+                android:id="@+id/writertxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/contenttxt"
+            android:layout_width="130pt"
+            android:layout_height="120pt"
+            android:textColor="#000000"
+            android:textSize="10pt"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/playerstxt"
+            android:layout_width="130pt"
+            android:layout_height="120pt"
+            android:textColor="#000000"
+            android:textSize="10pt"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/totalplayerstxt"
+            android:layout_width="130pt"
+            android:layout_height="120pt"
+            android:textColor="#000000"
+            android:textSize="10pt"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/calendertxt"
+            android:layout_width="130pt"
+            android:layout_height="120pt"
+            android:textColor="#000000"
+            android:textSize="10pt"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/commentEdt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:background="#000000"
+                android:hint="댓글을 입력하세요..."/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onCommentEntry"
+                android:text = "댓글 등록"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onReturn"
+                android:text = "글 목록으로 "/>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/scrolllayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#000000">
+        </LinearLayout>
+
+    </LinearLayout>
+    </ScrollView>

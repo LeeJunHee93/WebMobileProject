@@ -15,6 +15,14 @@
         <Button
             android:layout_width="120dp"
             android:layout_height="60dp"
+            android:id="@+id/bt"
+            android:text="췤"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="60dp"
             android:id="@+id/btnchk"
             android:text="종목선택"
             android:layout_margin="20dp"

@@ -25,8 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Board" />
-        <activity android:name=".Board$BoardMessage"/>
+        <activity android:name=".Board"/>
+        <activity android:name=".Boardreply"/>
         <activity android:name=".SignIn"/>
         <activity android:name=".SignUp"/>
 

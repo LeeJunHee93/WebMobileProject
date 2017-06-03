@@ -5,14 +5,22 @@
     android:layout_height="match_parent">
 
     <EditText
+        android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="ID를 입력하세요"
-        android:id="@+id/etSignInId" />
+        android:hint="email입력"/>
 
     <EditText
+        android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="PassWord를 입력하세요"
-        android:id="@+id/etSignInPW" />
+        android:hint="password입력"/>
+
+    <Button
+        android:id="@+id/bt_Login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="bt_Login"
+        android:text="로그인" />
+
 </LinearLayout>

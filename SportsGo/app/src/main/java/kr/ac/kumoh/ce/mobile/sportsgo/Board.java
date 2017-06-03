@@ -1,212 +1,165 @@
 package kr.ac.kumoh.ce.mobile.sportsgo;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by dlgus on 2017-05-02.
- */
-public class Board extends Activity implements AdapterView.OnItemClickListener {
+public class Board extends AppCompatActivity {
 
-//    protected ArrayList<boardinfo> rArray = new ArrayList<boardinfo>();
-    public static final String BOARDTAG ="BoardTag";
-    protected JSONObject mResult=null;
-    protected ListView mList;
-//    protected boardAdapter mAdapter;
-    protected RequestQueue mQueue;
-    protected ImageLoader mImageLoader=null;
+    Button[] btn;
+    ArrayList<MainActivity.ListItem> listItem = new ArrayList<MainActivity.ListItem>();
+    LinearLayout layout;
+    String[] info; //게시판 정보
+    TextView textView;
+    watchDB wdb;
+
+    int jsonSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board);
-
-    //    mAdapter = new boardAdapter(this, R.layout.listitem1, rArray);
-        mList = (ListView)findViewById(R.id.listview1);
-     //   mList.setAdapter(mAdapter);
-        mList.setOnItemClickListener(this);
-
+        textView = (TextView)findViewById(R.id.testtxt);
+        wdb = new watchDB();
+        wdb.execute();
     }
 
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-        Intent intent = new Intent(this, BoardMessage.class);
-        intent.putExtra("num", Integer.toString(pos));
+/*
+    public void onClick(View v) {
+        Intent intent = new Intent(getApplicationContext(), writeTest.class);
         startActivity(intent);
+
+        finish();
+    }
+    */
+
+    public void onQuit(View v) {
+        finish();
     }
 
 
-    /**
-     * Created by dlgus on 2017-05-02.
-     */
-    public static class BoardMessage extends Activity{
+    public void onNew(View v) {
+        Intent intent = new Intent(this, Boardreply.class);
+        startActivity(intent);
 
-        protected ArrayList<boardmessageinfo> rArray = new ArrayList<boardmessageinfo>();
-        public static final String BOARDMESSAGETAG = "BoardMessageTag";
-        protected JSONObject mResult = null;
-        protected ListView mList;
-        protected boardmessageAdapter mAdapter;
-        protected RequestQueue mQueue;
-        protected ImageLoader mImageLoader=null;
+        finish();
+    }
+
+    public class watchDB extends AsyncTask<String, Integer, String> {
+        String data = "";
+        String param = "id=" + SignIn.Id + "";
 
         @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.boardmessage);
+        protected String doInBackground(String... unused) {
+            StringBuilder jsonHtml = new StringBuilder();
+            try {
+                // 연결 url 설정
+                URL url = new URL( "http://shid1020.dothome.co.kr/board.php" );
+                // 커넥션 객체 생성
 
-            mAdapter = new boardmessageAdapter(this, R.layout.listitem2, rArray);
-            mList = (ListView)findViewById(R.id.listview2);
-            mList.setAdapter(mAdapter);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.connect();
 
-            Cache cache = new DiskBasedCache(getCacheDir(),1024*1024);
-            BasicNetwork network = new BasicNetwork(new HurlStack());
-            mQueue = new RequestQueue(cache, network);
-            mQueue.start();
-            requestMessage();
-        }
+                /* 안드로이드 -> 서버 파라메터값 전달 */
+                OutputStream outs = conn.getOutputStream();
+                outs.write(param.getBytes("UTF-8"));
+                outs.flush();
+                outs.close();
 
-        protected void requestMessage(){
-            String url="http://172.20.10.3/selectmessage.php";
+                   /* 서버 -> 안드로이드 파라메터값 전달 */
+                InputStream is = null;
+                is = conn.getInputStream();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, new JSONObject(),
-                    new Response.Listener<JSONObject>(){
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            mResult = response;
-                            drawList();
-                        }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //               Toast.makeText(this, "서버에러",Toast.LENGTH_LONG).show();
-                        }
-                    }
-            );
-            jsonObjectRequest.setTag(BOARDMESSAGETAG);
-            mQueue.add(jsonObjectRequest);
-        }
-        public void drawList(){
-            rArray.clear();
-            try{
-                TextView txName;
-                TextView txContent;
-                JSONArray jsonMainNode = mResult.getJSONArray("list");
-                JSONObject jsonChildNode = jsonMainNode.getJSONObject(1);
-                String name = jsonChildNode.getString("name");
-                Log.i("name", name);
-                String content = jsonChildNode.getString("content");
-                Log.i("content", content);
-                txName = (TextView)findViewById(R.id.name);
-                txContent =(TextView)findViewById(R.id.content);
-                txName.setText(name);
-                txContent.setText(content);
+                String line = null;
+                StringBuffer buff = new StringBuffer();
 
-                String rname = jsonChildNode.getString("rname");
-                Log.i("rname", rname);
-                String rcontent = jsonChildNode.getString("rcontent");
-                Log.i("rcontent", rcontent);
-                rArray.add(new boardmessageinfo(rname, rcontent));
-
-                for(int i=1;i<jsonMainNode.length();i++) {
-                    jsonChildNode = jsonMainNode.getJSONObject(i);
-                    rname = jsonChildNode.getString("rname");
-                    Log.i("rname", rname);
-                    rcontent = jsonChildNode.getString("rcontent");
-                    Log.i("rcontent", rcontent);
-                    rArray.add(new boardmessageinfo(rname, rcontent));
+                BufferedReader in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                for (; ; ) {
+                    // 웹상에 보여지는 텍스트를 라인단위로 읽어 저장.
+                    line = in.readLine();
+                    if (line == null) break;
+                    // 저장된 텍스트 라인을 jsonHtml에 붙여넣음
+                    jsonHtml.append(line + "\n");
                 }
+                in.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            catch(JSONException | NullPointerException e){
-                //       Toast.makeText(getActivity().getApplicationContext(),"Error"+e.toString(),Toast.LENGTH_LONG).show();
-                mResult=null;
-            }
-            mAdapter.notifyDataSetChanged();
+            return jsonHtml.toString();
         }
 
-        @Override
-        public void onStop() {
-            super.onStop();
-            if(mQueue!=null){
-                mQueue.cancelAll(BOARDMESSAGETAG);
-            }
-        }
+        protected void onPostExecute(String str) {
+            //서버에서 json값 받아오기
+            String [] txt;
 
-        public class boardmessageinfo {
-            String rname;
-            String rcontent;
+            try {
+                JSONObject root = new JSONObject(str);
+                JSONArray ja = root.getJSONArray("results");
+                jsonSize = ja.length();
+                txt = new String[8];
 
-            public boardmessageinfo(String rname, String rcontent) {
-                this.rname = rname;
-                this.rcontent = rcontent;
-            }
+                for (int i = 0; i < jsonSize; i++) {
+                    JSONObject jo = ja.getJSONObject(i);
 
-            public String getRname() {
-                return rname;
-            }
+                    txt[0]= jo.getString("boardid");
+                    txt[1] = jo.getString("user_email");
+                    txt[2] = jo.getString("title");
+                    txt[3] = jo.getString("contents");
+                    txt[4] = jo.getString("playesr");
+                    txt[5] = jo.getString("total_players");
+                    txt[6] = jo.getString("calendar");
+                    txt[7] = jo.getString("time");
 
-            public String getRcontent() {
-                return rcontent;
-            }
-        }
-
-        static class BoardMessageViewHolder {
-            TextView txRname;
-            TextView txRcontent;
-        }
-
-        public class boardmessageAdapter extends ArrayAdapter<boardmessageinfo> {
-
-            public boardmessageAdapter(Context context, int resource, List<boardmessageinfo> objects) {
-                super(context, resource, objects);
-            }
-
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                BoardMessageViewHolder holder;
-                if (convertView == null) {
-                    convertView = getLayoutInflater().inflate(R.layout.listitem2, parent, false);
-                    holder = new BoardMessageViewHolder();
-                    holder.txRname = (TextView) convertView.findViewById(R.id.rname);
-                    holder.txRcontent =(TextView) convertView.findViewById(R.id.rcontent);
-                    convertView.setTag(holder);
-
-                } else {
-                    holder = (BoardMessageViewHolder) convertView.getTag();
+                    listItem.add(new MainActivity.ListItem(txt));
                 }
-                holder.txRname.setText(getItem(position).getRname());
-                holder.txRcontent.setText(getItem(position).getRcontent());
-                return convertView;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Button.OnClickListener onClickListener = new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    info = new String[] {
+                            listItem.get(v.getId()).getData(0), listItem.get(v.getId()).getData(1), listItem.get(v.getId()).getData(2),
+                            listItem.get(v.getId()).getData(3), listItem.get(v.getId()).getData(4), listItem.get(v.getId()).getData(5),
+                            listItem.get(v.getId()).getData(6), listItem.get(v.getId()).getData(7)
+                    };
+                    Intent intent = new Intent(getApplicationContext(), Boardreply.class);
+                    intent.putExtra("info", info);
+                    startActivity(intent);
+                }
+            };
+
+            btn = new Button[jsonSize];
+            layout = (LinearLayout) findViewById(R.id.layout);
+
+            for (int i = 0; i < jsonSize; i++) {
+                btn[i] = new Button(getApplicationContext());
+                btn[i].setId(i);
+                btn[i].setOnClickListener(onClickListener);
+
+                btn[i].setText(listItem.get(i).getData(2) +"\n"+  "작성자 : " + listItem.get(i).getData(1)+ "     인원 : " +
+                        listItem.get(i).getData(4)+"/"+listItem.get(i).getData(5)+"     경기시간 : "+listItem.get(i).getData(6));
+                layout.addView(btn[i]);
             }
         }
     }

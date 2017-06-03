@@ -1,26 +1,22 @@
 package kr.ac.kumoh.ce.mobile.sportsgo;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapCompassManager;
@@ -40,6 +36,8 @@ import com.nhn.android.mapviewer.overlay.NMapCalloutOverlay;
 import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
+
+import java.util.ArrayList;
 
 /**
  * Created by dlgus on 2017-04-29.
@@ -140,6 +138,15 @@ public class MainPage extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Board.class);
                 startActivity(intent);
+            }
+        });
+        Button b = (Button)rootView.findViewById(R.id.bt);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Board.class);
+                startActivity(intent);
+
             }
         });
         chk = (Button)rootView.findViewById(R.id.btnchk);

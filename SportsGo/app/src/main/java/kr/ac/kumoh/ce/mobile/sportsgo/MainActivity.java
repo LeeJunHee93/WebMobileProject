@@ -1,28 +1,20 @@
 package kr.ac.kumoh.ce.mobile.sportsgo;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
     private ViewPager mViewPager;
 
     @Override
@@ -42,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
     }
 
     /**
@@ -113,4 +104,54 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+    public static class ListItem {
+
+        private String[] mData;
+
+        public ListItem(String[] data ){
+            mData = data;
+        }
+
+        public ListItem( String txt1, String txt2,String txt3){
+
+            mData = new String[3];
+            mData[0] = txt1;
+            mData[1] = txt2;
+            mData[2] = txt3;
+
+        }
+        public ListItem( String txt1, String txt2,String txt3,String txt4,String txt5,String txt6,String txt7,String txt8 ){
+
+            mData = new String[8];
+            mData[0] = txt1;
+            mData[1] = txt2;
+            mData[2] = txt3;
+            mData[3] = txt4;
+            mData[4] = txt5;
+            mData[5] = txt6;
+            mData[6] = txt7;
+            mData[7] = txt8;
+
+        }
+        public ListItem( String txt1, String txt2, String txt3, String txt4,String txt5){
+
+            mData = new String[5];
+            mData[0] = txt1;
+            mData[1] = txt2;
+            mData[2] = txt3;
+            mData[3] = txt4;
+            mData[4] = txt5;
+
+        }
+        public String[] getData(){
+            return mData;
+        }
+        public String getData(int index){
+            return mData[index];
+        }
+        public void setData(String[] data){
+            mData = data;
+        }
+    }//end listitem
+
 }
