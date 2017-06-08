@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="제목 :"
+            android:textColor="#000000"/>
+
+        <EditText
+            android:id="@+id/writetitleeedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint = "제목을 입력하세요"
+            android:textColor="#000000"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/writetotlaedt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint = "모집 인원을 입력하세요"
+            android:textColor="#000000"/>
+
+        <EditText
+            android:id="@+id/writecaledt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint = "경기 시간을 입력하세요"
+            android:textColor="#000000"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내용 :"
+            android:textColor="#000000"/>
+
+        <EditText
+            android:id="@+id/writecontentedt"
+            android:layout_width="fill_parent"
+            android:layout_height="120pt"
+            android:hint = "내용을 입력하세요 .."
+            android:textColor="#000000"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onEntry"
+            android:text = "등록"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCancel"
+            android:text = "취소"/>
+
+    </LinearLayout>
+
+</LinearLayout>

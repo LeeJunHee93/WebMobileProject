@@ -29,14 +29,7 @@ public class MyPage extends Fragment {
                 startActivity(intent);
             }
         });
-        Button btnSignUp = (Button)rootView.findViewById(R.id.btnSignUp);
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SignUp.class);
-                startActivity(intent);
-            }
-        });
+
         return rootView;
     }
 }

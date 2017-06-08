@@ -24,7 +24,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -173,25 +172,53 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		}
 	}
 
-	// Resource Ids for single icons
-	private final ResourceIdsOnMap mResourceIdsForMarkerOnMap[] = {
-		// Spot, Pin icons
-		new ResourceIdsOnMap(NMapPOIflagType.PIN, R.drawable.ic_pin_01, R.drawable.ic_pin_02),
-		new ResourceIdsOnMap(NMapPOIflagType.SPOT, R.drawable.ic_pin_01, R.drawable.ic_pin_02),
 
-		// Direction POI icons: From, To
-		new ResourceIdsOnMap(NMapPOIflagType.FROM, R.drawable.ic_map_start, R.drawable.ic_map_start_over),
-		new ResourceIdsOnMap(NMapPOIflagType.TO, R.drawable.ic_map_arrive, R.drawable.ic_map_arrive_over),
+	// Resource Ids for single icons
+	private final ResourceIdsOnMap mResourceIdsForMarkerOnMap1[] = {
+			// Spot, Pin icons
+			new ResourceIdsOnMap(NMapPOIflagType.PIN, R.drawable.pin1_1, R.drawable.pin1_2),
+			new ResourceIdsOnMap(NMapPOIflagType.SPOT, R.drawable.pin1_1, R.drawable.pin1_2),
+
+			// Direction POI icons: From, To
+			new ResourceIdsOnMap(NMapPOIflagType.FROM, R.drawable.ic_map_start, R.drawable.ic_map_start_over),
+			new ResourceIdsOnMap(NMapPOIflagType.TO, R.drawable.ic_map_arrive, R.drawable.ic_map_arrive_over),
 	};
 
+	private final ResourceIdsOnMap mResourceIdsForMarkerOnMap2[] = {
+			// Spot, Pin icons
+			new ResourceIdsOnMap(NMapPOIflagType.PIN + 1, R.drawable.pin2_1, R.drawable.pin2_2),
+			new ResourceIdsOnMap(NMapPOIflagType.SPOT + 1, R.drawable.pin2_1, R.drawable.pin2_2),
+
+			// Direction POI icons: From, To
+			new ResourceIdsOnMap(NMapPOIflagType.FROM, R.drawable.ic_map_start, R.drawable.ic_map_start_over),
+			new ResourceIdsOnMap(NMapPOIflagType.TO, R.drawable.ic_map_arrive, R.drawable.ic_map_arrive_over),
+	};
+	private final ResourceIdsOnMap mResourceIdsForMarkerOnMap3[] = {
+			// Spot, Pin icons
+			new ResourceIdsOnMap(NMapPOIflagType.PIN + 2, R.drawable.pin3_1, R.drawable.pin3_2),
+			new ResourceIdsOnMap(NMapPOIflagType.SPOT + 2, R.drawable.pin3_1, R.drawable.pin3_2),
+
+			// Direction POI icons: From, To
+			new ResourceIdsOnMap(NMapPOIflagType.FROM, R.drawable.ic_map_start, R.drawable.ic_map_start_over),
+			new ResourceIdsOnMap(NMapPOIflagType.TO, R.drawable.ic_map_arrive, R.drawable.ic_map_arrive_over),
+	};
+	private final ResourceIdsOnMap mResourceIdsForMarkerOnMap4[] = {
+			// Spot, Pin icons
+			new ResourceIdsOnMap(NMapPOIflagType.PIN + 3, R.drawable.pin4_1, R.drawable.pin4_2),
+			new ResourceIdsOnMap(NMapPOIflagType.SPOT + 3, R.drawable.pin4_1, R.drawable.pin4_2),
+
+			// Direction POI icons: From, To
+			new ResourceIdsOnMap(NMapPOIflagType.FROM, R.drawable.ic_map_start, R.drawable.ic_map_start_over),
+			new ResourceIdsOnMap(NMapPOIflagType.TO, R.drawable.ic_map_arrive, R.drawable.ic_map_arrive_over),
+	};
 	/**
 	 * Find resource id corresponding to the markerId.
-	 * 
+	 *
 	 * @param markerId marker id for a NMapPOIitem.
 	 * @param focused flag to indicated focused or normal state of this marker.
-	 * 	
+	 *
 	 * @return resource id for the given markerId.
-	 * 
+	 *
 	 * @see NMapPOIflagType
 	 */
 	@Override
@@ -202,8 +229,15 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 			//Log.i(LOG_TAG, "getResourceIdForMarker: markerId=" + markerId + ", focused=" + focused);
 		}
 
-		if (markerId < kr.ac.kumoh.ce.mobile.sportsgo.NMapPOIflagType.SINGLE_MARKER_END) {
-			resourceId = getResourceIdOnMapView(markerId, focused, mResourceIdsForMarkerOnMap);
+		if (markerId <  kr.ac.kumoh.ce.mobile.sportsgo.NMapPOIflagType.SINGLE_MARKER_END) {
+			if(markerId == NMapPOIflagType.PIN)
+				resourceId = getResourceIdOnMapView(markerId, focused, mResourceIdsForMarkerOnMap1);
+			else if(markerId == NMapPOIflagType.PIN + 1)
+				resourceId = getResourceIdOnMapView(markerId, focused, mResourceIdsForMarkerOnMap2);
+			else if(markerId == NMapPOIflagType.PIN + 2)
+				resourceId = getResourceIdOnMapView(markerId, focused, mResourceIdsForMarkerOnMap3);
+			else if(markerId == NMapPOIflagType.PIN + 3)
+				resourceId = getResourceIdOnMapView(markerId, focused, mResourceIdsForMarkerOnMap4);
 			if (resourceId > 0) {
 				return resourceId;
 			}

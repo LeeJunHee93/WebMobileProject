@@ -3,25 +3,29 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/replyid"
+        android:textSize="16dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="#0099FF"
+        />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
-        android:padding="16dp"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rname"
-            android:textSize="24dp"
-            android:textColor="#000000" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:paddingLeft="5dp"
+        android:id="@+id/replycontents"
+        android:textColor="#000000"
+        android:layout_marginLeft="5dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rcontent"
-            android:textSize="16dp"
-            android:textColor="#666666" />
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/replytime"
+        android:layout_marginLeft="5dp"
+        android:textSize="11dp"/>
+
 </LinearLayout>

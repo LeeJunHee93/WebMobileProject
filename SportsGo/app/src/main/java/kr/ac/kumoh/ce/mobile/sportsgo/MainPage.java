@@ -46,6 +46,7 @@ public class MainPage extends Fragment {
     View rootView;
     Button chk;
     TextView tx1;
+    int  flag = 0;
     public MainPage() { }
     private NMapContext mMapContext;
     private static final String CLIENT_ID = "uXlyvf1k4B27uW1FU0u2";// 애플리케이션 클라이언트 아이디 값
@@ -201,42 +202,132 @@ public class MainPage extends Fragment {
         return rootView;
     }
 
-    int A[] = {1, 1, 1, 1}; // 종목별 마커수
+    int A[] = {6, 5, 5, 6}; // 종목별 마커수
     double sport[][][] = { // 종목별 경도위도 좌표
             {
-                    {128.387022, 36.142389}
+                    {128.387908, 36.145690},
+                    {128.396855, 36.135888},
+                    {128.438515, 36.135044},
+                    {128.382141, 36.120216},
+                    {128.332281, 36.103716},
+                    {128.426904, 36.101822}
             },
             {
-                    {128.399425, 36.144728}
+                    {128.394140, 36.147655},
+                    {128.403098, 36.135069},
+                    {128.416344, 36.145152},
+                    {128.392735, 36.115331},
+                    {128.434075, 36.118279}
             },
             {
-                    {128.391462, 36.149230}
+                    {128.389096, 36.145950},
+                    {128.403668, 36.136911},
+                    {128.411407, 36.138479},
+                    {128.374276, 36.125174},
+                    { 128.399383,36.084937}
             },
             {
-                    {128.391985, 36.139113}
+                    {128.387908, 36.145690},
+                    {128.395454, 36.145299},
+                    {128.368365, 36.118013},
+                    {128.431263, 36.142566},
+                    {128.401353, 36.101382},
+                    {128.336073, 36.113804}
+
             },
-    };
-    String Ssport1[][] = { // 종목별 구장이름
-            {"축구"},
-            {"농구"},
-            {"풋살"},
-            {"배드"}
     };
 
+    String Ssport1[][] = { // 종목별 구장이름
+            {"옥계축구연합", "구미축구협회", "강변축구장", "유소년축구클럽", "슛돌이축구장", "호날두축구장"},
+            {"금오농구클럽", "인동농구장", "구미농구협회", "한마음농구교실", "커리농구장"},
+            {"두발로풋살장", "강변풋살장", "유소년축구클럽", "은봉풋살경기장", "월드풋살클럽"},
+            {"구미배드민턴", "봉배드민턴장", "배드민턴플러스", "자이언트배드민턴", "배드민턴매니아", "금오배드민턴클럽"}
+    };
+    String Address[][] = {
+            {
+                    "경상북도 구미시 양포동 금오공과대학교 운동장",
+                    "경상북도 구미시 거의동 365-4",
+                    "경상북도 구미시 양포동 137-3",
+                    "경상북도 구미시 비산동 264",
+                    "경상북도 구미시 형곡2동 산38",
+                    "경상북도 구미시 인동13길 23"
+            },
+            {
+                    "경상북도 구미시 거의동 산13",
+                    "경상북도 구미시 양포동 929-1",
+                    "경상북도 구미시 양포동 산117",
+                    "경상북도 구미시 공단1동 산4",
+                    "경상북도 구미시 황상동 97-3"
+            },
+            {
+                    "경상북도 구미시 양포동 2",
+                    "경상북도 구미시 거의동 산86-4",
+                    "경상북도 구미시 거의동 610-1",
+                    "경상북도 구미시 비산동 413",
+                    "경상북도 칠곡군 석적읍 중리 495-5"
+            },
+            {
+                    "경상북도 구미시 양포동 금오공과대학교 체육관",
+                    "경상북도 구미시 거의동 산49",
+                    "경상북도 구미시 공단1동 331-15",
+                    "경상북도 구미시 산동면 신당리 1192-10",
+                    "경상북도 구미시 진평동 647",
+                    "경상북도 구미시 경은로 85"
+            },
+
+    };
+
+    String Call[][] = {
+            {
+                    "010-1856-6215",
+                    "054-545-8523",
+                    "010-1235-8456",
+                    "054-321-6548",
+                    "010-4862-9978",
+                    "010-8853-7410"
+            },
+            {
+                    "054-126-4574",
+                    "010-3756-3335",
+                    "010-4568-1239",
+                    "054-985-6571",
+                    "054-632-1238"
+            },
+            {
+                    "010-8523-9476",
+                    "010-8462-5195",
+                    "010-9713-1323",
+                    "054-540-3088",
+                    "054-850-2254"
+            },
+            {
+                    "054-630-8541",
+                    "010-1035-6825",
+                    "010-9630-5412",
+                    "054-552-6696",
+                    "010-7749-3321",
+                    "010-3005-6256"
+            },
+
+    };
     private void POIdataOverlay(ArrayList itemSelected) {
         mOverlayManager.clearOverlays();
-        // Markers for POI item
-        int markerId = NMapPOIflagType.PIN;
+
+        int markerId[] = {NMapPOIflagType.PIN, NMapPOIflagType.PIN, NMapPOIflagType.PIN,NMapPOIflagType.PIN} ;
         int markernum = 0;
-        for(int i=0; i<itemSelected.size(); i++)
+
+        for(int i=0; i<itemSelected.size(); i++) {
+            markerId[i] = markerId[i] + (Integer) itemSelected.get(i);
             markernum += A[(Integer) itemSelected.get(i)];
 
+        }
         NMapPOIdata poiData = new NMapPOIdata(markernum, mMapViewerResourceProvider);
 
         poiData.beginPOIdata(markernum);
         for(int i=0; i<itemSelected.size(); i++) {
             for(int j=0; j<A[(Integer) itemSelected.get(i)]; j++) {
-                poiData.addPOIitem(sport[(Integer) itemSelected.get(i)][j][0], sport[(Integer) itemSelected.get(i)][j][1], Ssport1[(Integer) itemSelected.get(i)][j], markerId, 0);
+                poiData.addPOIitem(sport[(Integer) itemSelected.get(i)][j][0], sport[(Integer) itemSelected.get(i)][j][1], Ssport1[(Integer) itemSelected.get(i)][j], markerId[i], 0);
+                //Log.i("@@@markerId", "" + markerId);
             }
         }
         poiData.endPOIdata();
@@ -409,7 +500,8 @@ public class MainPage extends Fragment {
             if (errorInfo == null) { // success
                 // restore map view state such as map center position and zoom level.
                 //restoreInstanceState();
-                startMyLocation();
+                if( flag == 0 ) startMyLocation();
+                flag = 1;
             } else { // fail
                 Log.e(LOG_TAG, "onFailedToInitializeWithError: " + errorInfo.toString());
 
@@ -501,9 +593,37 @@ public class MainPage extends Fragment {
             if (DEBUG) {
                 Log.i(LOG_TAG, "onCalloutClick: title=" + item.getTitle());
             }
+            int markerId = item.getMarkerId();
+            String m_title =  item.getTitle();
+            String m_address = "";
+            String m_call = "";
+            if ( markerId == NMapPOIflagType.PIN) {
+                markerId = 0;
+            }
+            else if ( markerId == NMapPOIflagType.PIN + 1) {
+                markerId = 1;
+            }
+            else if ( markerId == NMapPOIflagType.PIN + 2) {
+                markerId = 2;
+            }
+            else if ( markerId == NMapPOIflagType.PIN + 3) {
+                markerId = 3;
+            }
+            for(int i = 0; i < A[markerId]; i++) {
+                if ( m_title == Ssport1[markerId][i]) {
+                    m_address = Address[markerId][i];
+                    m_call = Call[markerId][i];
+                }
+            }
+
+            Intent intent = new Intent(getActivity(), PopupActivity.class);
+            intent.putExtra("title", m_title); // 여기서 상세정보 보내주면 됨
+            intent.putExtra("address", m_address);
+            intent.putExtra("call" , m_call);
+            startActivityForResult(intent, 1);
 
             // [[TEMP]] handle a click event of the callout
-            Toast.makeText(getContext(), "여기바꾸면됩니다: " + item.getTitle(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(), "여기바꾸면됩니다: " + item.getTitle(), Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -612,7 +732,6 @@ public class MainPage extends Fragment {
                 final int childTop = (height - childHeight) / 2;
                 view.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
             }
-
             if (changed) {
                 mOverlayManager.onSizeChanged(width, height);
             }

@@ -2,29 +2,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/signup_back">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="WELCOME!"
+        android:textSize="50dp"
+        android:layout_marginTop="90dp"
+        android:textStyle="italic|bold"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="40dp">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:src="@drawable/sign_email"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="55dp"
+            />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="ID를 입력하세요"
+            android:hint="Email Address 입력"
             android:id="@+id/etSignUpId" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="중복확인"
-            android:id="@+id/btnCheck"/>
+            android:onClick="check"
+            android:text="ID Check"
+            android:id="@+id/btnCheck"
+            android:background="#00ff0000"
+            android:textStyle="bold"/>
+
     </LinearLayout>
 
-    <EditText
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="PassWord를 입력하세요"
-        android:id="@+id/etSignUpPW" />
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp">
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/sign_lock"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="50dp"
+            />
+    <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="Password 입력"
+            android:id="@+id/etSignUpPW" />
+
+
+    </LinearLayout>
+
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Password 확인"
+        android:id="@+id/etSignUpPPW"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="90dp"/>
+
+    <Button
+        android:id="@+id/btnJoin"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:onClick="bt_Join"
+        android:background="#00ff0000"
+        android:layout_marginLeft="53dp"
+        android:layout_marginTop="30dp"
+        android:text="Join"
+        android:textStyle="bold"/>
 </LinearLayout>

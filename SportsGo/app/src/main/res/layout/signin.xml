@@ -2,25 +2,89 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/signin_back">
 
-    <EditText
-        android:id="@+id/email"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="email입력"/>
+        android:layout_gravity="center"
+        android:text="Sports Go!"
+        android:textSize="50dp"
+        android:layout_marginTop="90dp"
+        android:textStyle="italic|bold" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="password입력"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="40dp">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:src="@drawable/sign_email"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="55dp"
+            />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_marginTop="10dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:textColor="#787878"
+            android:textColorHint="#787878"
+            android:hint="Email address : "
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/sign_lock"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="50dp"
+            />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:textColor="#787878"
+            android:textColorHint="#787878"
+            android:layout_marginTop="10dp"
+            android:hint="Password : "
+            />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/bt_Login"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:onClick="bt_Login"
-        android:text="로그인" />
+        android:background="#00ff0000"
+        android:layout_marginLeft="53dp"
+        android:layout_marginTop="30dp"
+        android:text="Sign In"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="#00ff0000"
+        android:layout_marginLeft="53dp"
+        android:layout_marginTop="10dp"
+        android:text="Sign Up"
+        android:textStyle="bold"/>
 
 </LinearLayout>

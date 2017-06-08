@@ -2,6 +2,7 @@ package kr.ac.kumoh.ce.mobile.sportsgo;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -52,14 +53,19 @@ public class SignIn extends Activity {
         et_email = (EditText) findViewById(R.id.email);
         et_pw = (EditText) findViewById(R.id.password);
         login = (Button)findViewById(R.id.bt_Login);
-
+        Button btn_join = (Button)findViewById(R.id.btnSignUp);
+        btn_join.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(), SignUp.class);
+                startActivity(intent);
+            }
+        });
         login_chk = 0;
 
-        //서버의 user테이블에서 user들의 정보를 가져옴
         task = new phpDown();
         task.execute("http://shid1020.dothome.co.kr/server.php");
     }
-
 
     public class phpDown extends AsyncTask<String, Integer,String> {
         String data = "";
@@ -67,22 +73,16 @@ public class SignIn extends Activity {
         protected String doInBackground(String... urls) {
             StringBuilder jsonHtml = new StringBuilder();
             try{
-                // 연결 url 설정
                 URL url = new URL(urls[0]);
-                // 커넥션 객체 생성
                 HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-                // 연결되었으면.
                 if(conn != null){
                     conn.setConnectTimeout(10000);
                     conn.setUseCaches(false);
-                    // 연결되었음 코드가 리턴되면.
                     if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
                         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
                         for(;;){
-                            // 웹상에 보여지는 텍스트를 라인단위로 읽어 저장.
                             String line = br.readLine();
                             if(line == null) break;
-                            // 저장된 텍스트 라인을 jsonHtml에 붙여넣음
                             jsonHtml.append(line + "\n");
                         }
                         br.close();
@@ -223,7 +223,7 @@ public class SignIn extends Activity {
             int i;
             int check =0;
             for(i = 0;i<Tu_length;i++){
-                if(sEl.equals(listItem.get(i).getData(0) ) ){
+                if(sEl.equals(listItem.get(i).getData(1) ) ){
                     check++;
                     break;
                 }

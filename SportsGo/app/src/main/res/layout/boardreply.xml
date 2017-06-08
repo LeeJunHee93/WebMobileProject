@@ -5,126 +5,133 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/titletxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="zzz"
-            android:layout_gravity="center"
-            android:textSize="15pt"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:layout_marginTop="5pt"/>
-
-        <TextView
-            android:id="@+id/timetxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="zzz"
-            android:textSize="12sp"
-            android:textColor="#000000"/>
-
-        <TextView
-            android:id="@+id/writertxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="zzz"
-            android:layout_gravity="right"
-            android:textSize="12sp"
-            android:textColor="#000000"/>
-
-
-        <TextView
-            android:id="@+id/contenttxt"
-            android:layout_width="match_parent"
-            android:layout_height="80pt"
-            android:textColor="#000000"
-            android:textSize="10pt"
-            android:layout_gravity="center"
-            android:layout_marginTop="5pt"/>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/detail"
+                android:id="@+id/titletxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="zzz"
+                android:layout_gravity="center"
+                android:textSize="15pt"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginTop="5pt"/>
+
+            <TextView
+                android:id="@+id/timetxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="zzz"
                 android:textSize="12sp"
                 android:textColor="#000000"/>
 
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
+            <TextView
+                android:id="@+id/writertxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onReturn"
-                android:layout_gravity="left"
-                android:text = "글 목록으로 "/>
+                android:text="zzz"
+                android:layout_gravity="right"
+                android:textSize="12sp"
+                android:textColor="#000000"/>
+
+
+            <TextView
+                android:id="@+id/contenttxt"
+                android:layout_width="match_parent"
+                android:layout_height="80pt"
+                android:textColor="#000000"
+                android:textSize="10pt"
+                android:layout_gravity="center"
+                android:layout_marginTop="5pt"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="#000000"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:gravity="right"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/join"
-                    android:text="참여!"/>
+                    android:onClick="onReturn"
+                    android:layout_gravity="left"
+                    android:text = "글 목록으로 "/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="right"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/join"
+                        android:onClick="join"
+                        android:text="참여!"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/commentEdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="8"
+                    android:hint="댓글을 입력하세요..."/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onCommentEntry"
+                    android:text = "댓글 등록"/>
 
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/commentEdt"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:hint="댓글을 입력하세요..."/>
+                android:gravity="center"
+                android:text="댓글"
+                android:textSize="20dp"
+                />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onCommentEntry"
-                android:text = "댓글 등록"/>
+            <ListView
+                android:id="@+id/listview2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </ListView>
+            </ScrollView>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/scrolllayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#000000">
-        </LinearLayout>
-
-    </LinearLayout>
-
-</ScrollView>
 </LinearLayout>

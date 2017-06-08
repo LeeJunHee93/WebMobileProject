@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//       setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -97,9 +96,9 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "MainPage 1";
+                    return "MainPage";
                 case 1:
-                    return "MyPage 2";
+                    return "MyPage";
             }
             return null;
         }
@@ -109,7 +108,13 @@ public class MainActivity extends AppCompatActivity {
         private String[] mData;
 
         public ListItem(String[] data ){
+            mData = new String[data.length];
             mData = data;
+
+            for(int i=0; i<data.length; i++) {
+                Log.i("mData"+i, mData[i]);
+                Log.i("data"+i, data[i]);
+            }
         }
 
         public ListItem( String txt1, String txt2,String txt3){
@@ -131,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
             mData[5] = txt6;
             mData[6] = txt7;
             mData[7] = txt8;
-
         }
+
         public ListItem( String txt1, String txt2, String txt3, String txt4,String txt5){
 
             mData = new String[5];
@@ -143,15 +148,17 @@ public class MainActivity extends AppCompatActivity {
             mData[4] = txt5;
 
         }
+
         public String[] getData(){
             return mData;
         }
         public String getData(int index){
+            Log.i("여기는 GETdata", ""+mData[index]);
             return mData[index];
         }
         public void setData(String[] data){
             mData = data;
         }
-    }//end listitem
+    }
 
 }
