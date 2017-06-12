@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -13,10 +14,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="15pt"
-            android:textStyle="bold"
+            android:layout_marginTop="20pt"
             android:textColor="#000000"
-            android:layout_marginTop="20pt"/>
+            android:textSize="15pt"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -27,15 +28,15 @@
                 android:id="@+id/timetxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#000000"/>
+                android:textColor="#000000"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/writertxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#000000"/>
+                android:textColor="#000000"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -43,30 +44,33 @@
             android:id="@+id/contenttxt"
             android:layout_width="130pt"
             android:layout_height="120pt"
+            android:layout_gravity="center"
             android:textColor="#000000"
-            android:textSize="10pt"
-            android:layout_gravity="center"/>
+            android:textSize="10pt" />
+
         <TextView
             android:id="@+id/playerstxt"
             android:layout_width="130pt"
             android:layout_height="120pt"
+            android:layout_gravity="center"
             android:textColor="#000000"
-            android:textSize="10pt"
-            android:layout_gravity="center"/>
+            android:textSize="10pt" />
+
         <TextView
             android:id="@+id/totalplayerstxt"
             android:layout_width="130pt"
             android:layout_height="120pt"
+            android:layout_gravity="center"
             android:textColor="#000000"
-            android:textSize="10pt"
-            android:layout_gravity="center"/>
+            android:textSize="10pt" />
+
         <TextView
             android:id="@+id/calendertxt"
             android:layout_width="130pt"
             android:layout_height="120pt"
+            android:layout_gravity="center"
             android:textColor="#000000"
-            android:textSize="10pt"
-            android:layout_gravity="center"/>
+            android:textSize="10pt" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -80,31 +84,29 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="8"
                 android:background="#000000"
-                android:hint="댓글을 입력하세요..."/>
+                android:hint="댓글을 입력하세요..." />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onCommentEntry"
-                android:text = "댓글 등록"/>
+                android:text="댓글 등록" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onReturn"
-                android:text = "글 목록으로 "/>
+                android:text="글 목록으로 " />
 
         </LinearLayout>
-
 
 
         <LinearLayout
             android:id="@+id/scrolllayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#000000">
-        </LinearLayout>
+            android:background="#000000"
+            android:orientation="vertical"></LinearLayout>
 
     </LinearLayout>
-    </ScrollView>
+</ScrollView>

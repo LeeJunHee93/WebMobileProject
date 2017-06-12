@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="80dp"
         android:background="#FFFFFF"
-        >
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp">
+
         <TextView
+            android:id="@+id/board_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="title"
-            android:id="@+id/board_title"
-            android:textSize="22dp"
-            android:singleLine="true"
             android:layout_marginLeft="10dp"
-            android:textColor="#000000" />
+            android:singleLine="true"
+            android:text="title"
+            android:textColor="#000000"
+            android:textSize="22dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,38 +30,38 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_weight="0.3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:id="@+id/board_username"
-                android:text="name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textSize="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0.3"
+                android:text="name"
                 android:textColor="#666666"
-                />
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <TextView
-                android:layout_weight="0.1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="zzz"
                 android:id="@+id/board_people"
-                />
-
-            <TextView
-                android:layout_weight="0.35"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="time"
-                android:paddingRight="10dp"
-                android:gravity="right"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0.2"
+                android:paddingLeft="10dp"
+                android:text="zzz" />
+
+            <TextView
                 android:id="@+id/board_playtime"
-                />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0.30"
+                android:gravity="right"
+                android:paddingRight="10dp"
+                android:text="time" />
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

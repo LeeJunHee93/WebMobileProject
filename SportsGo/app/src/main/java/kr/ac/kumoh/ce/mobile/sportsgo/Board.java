@@ -2,18 +2,22 @@ package kr.ac.kumoh.ce.mobile.sportsgo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,98 +33,154 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board extends AppCompatActivity {
-
-    String [] txt;
-    LinearLayout layout;
-    TextView textView;
     watchDB wdb;
-    String info[];
-    protected ArrayList<BoardContents> rArray = new ArrayList<BoardContents>();
 
+    TextView textView;
+    String[] txt;
+    String info[];
+    String stadiuminfo;
+    LinearLayout layout;
+
+    protected ArrayList<BoardContents> rArray = new ArrayList<BoardContents>();
     protected ListView mList;
     protected BoardContentsAdapter mAdapter;
-
     int jsonSize;
+
+    Animation FabOpen, FabClose, FabRClockwise, FabRanticlockWise;
+    private FloatingActionButton fabMain, fabWrite, fabCached;
+    boolean isOpen = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board);
 
+        Intent stadiuminfointent = getIntent();
+        stadiuminfo = stadiuminfointent.getStringExtra("stadiuminfo");
+
+        FabOpen = AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.fab_open);
+        FabClose = AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.fab_close);
+        FabRClockwise = AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.rotate_clockwise);
+        FabRanticlockWise = AnimationUtils.loadAnimation(this.getApplicationContext(), R.anim.rotate_anticlockwise);
+
+        fabMain = (FloatingActionButton) findViewById(R.id.fabMain);
+        fabWrite = (FloatingActionButton) findViewById(R.id.fabWrite);
+        fabCached = (FloatingActionButton) findViewById(R.id.fabCached);
+
+        fabMain.setOnClickListener(clickListener);
+        fabWrite.setOnClickListener(clickListener);
+        fabCached.setOnClickListener(clickListener);
+
         rArray = new ArrayList<BoardContents>();
         mAdapter = new BoardContentsAdapter(this, R.layout.listitem1, rArray);
-        mList = (ListView)findViewById(R.id.listview1);
+        mList = (ListView) findViewById(R.id.listview1);
         mList.setAdapter(mAdapter);
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(Board.this, Boardreply.class);
-                info = new String[] {
-                        mAdapter.getItem(i).getBoardid(), mAdapter.getItem(i).getUser_email(), mAdapter.getItem(i).getTitle(),
-                        mAdapter.getItem(i).getContents(), mAdapter.getItem(i).getPlayers(), mAdapter.getItem(i).getTotal_players(),
-                        mAdapter.getItem(i).getCalendar(), mAdapter.getItem(i).getTime()
-                };
-                intent.putExtra("info", info);
-                startActivity(intent);
-                finish();
+                if (SignIn.Email != "") {
+                    Intent intent = new Intent(Board.this, Boardreply.class);
+                    info = new String[]{
+                            mAdapter.getItem(i).getBoardid(), mAdapter.getItem(i).getUser_email(), mAdapter.getItem(i).getTitle(),
+                            mAdapter.getItem(i).getContents(), mAdapter.getItem(i).getPlayers(), mAdapter.getItem(i).getTotal_players(),
+                            mAdapter.getItem(i).getCalendar(), mAdapter.getItem(i).getTime()
+                    };
+                    intent.putExtra("info", info);
+                    intent.putExtra("backinfo", "0");
+                    intent.putExtra("stadiuminfo", stadiuminfo);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "로그인이 필요합니다", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), SignIn.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
-        textView = (TextView)findViewById(R.id.testtxt);
+        textView = (TextView) findViewById(R.id.testtxt);
         wdb = new watchDB();
         wdb.execute();
     }
 
-    public void onQuit(View v) {
-        finish();
-    }
+    View.OnClickListener clickListener = new View.OnClickListener() {
 
-    public void onNew(View v) {
-        Intent intent = new Intent(this, Boardreply.class);
-        startActivity(intent);
-        finish();
-    }
-
-    public void writeBoard(View v) {
-        Intent intent = new Intent(getApplicationContext(), WriteBoard.class);
-        startActivity(intent);
-        finish();
-    }
+        @Override
+        public void onClick(View v) {
+            Intent intent;
+            switch (v.getId()) {
+                case R.id.fabMain:
+                    if (!isOpen) {
+                        fabCached.startAnimation(FabOpen);
+                        fabWrite.startAnimation(FabOpen);
+                        fabMain.startAnimation(FabRClockwise);
+                        fabCached.setClickable(true);
+                        fabWrite.setClickable(true);
+                        isOpen = true;
+                    } else {
+                        fabCached.startAnimation(FabClose);
+                        fabWrite.startAnimation(FabClose);
+                        fabMain.startAnimation(FabRanticlockWise);
+                        fabCached.setClickable(false);
+                        fabWrite.setClickable(false);
+                        isOpen = false;
+                    }
+                    break;
+                case R.id.fabCached:
+                    intent = new Intent(getApplicationContext(), Board.class);
+                    intent.putExtra("stadiuminfo", stadiuminfo);
+                    startActivity(intent);
+                    finish();
+                    break;
+                case R.id.fabWrite:
+                    if (SignIn.Email != "") {
+                        intent = new Intent(getApplicationContext(), WriteBoard.class);
+                        intent.putExtra("stadiuminfo", stadiuminfo);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "로그인이 필요합니다", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(getApplicationContext(), SignIn.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    break;
+            }
+        }
+    };
 
     public class watchDB extends AsyncTask<String, Integer, String> {
-        String param = "id=" + SignIn.Id + "";
+        String param = "stadiuminfo=" + stadiuminfo + "";
 
         @Override
         protected String doInBackground(String... unused) {
             StringBuilder jsonHtml = new StringBuilder();
 
             try {
-                URL url = new URL( "http://shid1020.dothome.co.kr/board.php" );
+                URL url = new URL("http://shid1020.dothome.co.kr/board.php");
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setDoInput(true);
                 conn.connect();
 
-                /* 안드로이드 -> 서버 파라메터값 전달 */
                 OutputStream outs = conn.getOutputStream();
                 outs.write(param.getBytes("UTF-8"));
                 outs.flush();
                 outs.close();
 
-                   /* 서버 -> 안드로이드 파라메터값 전달 */
                 InputStream is = null;
                 is = conn.getInputStream();
 
                 String line = null;
-                StringBuffer buff = new StringBuffer();
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 for (; ; ) {
-                    // 웹상에 보여지는 텍스트를 라인단위로 읽어 저장.
                     line = in.readLine();
                     if (line == null) break;
-                    // 저장된 텍스트 라인을 jsonHtml에 붙여넣음
                     jsonHtml.append(line + "\n");
                 }
                 in.close();
@@ -131,19 +191,16 @@ public class Board extends AppCompatActivity {
         }
 
         protected void onPostExecute(String str) {
-            //서버에서 json값 받아오기
-
             try {
                 JSONObject root = new JSONObject(str);
                 JSONArray ja = root.getJSONArray("results");
                 jsonSize = ja.length();
                 txt = new String[8];
 
-                Log.i("JsonSize", ""+jsonSize);
                 for (int i = 0; i < jsonSize; i++) {
                     JSONObject jo = ja.getJSONObject(i);
 
-                    txt[0]= jo.getString("boardid");
+                    txt[0] = jo.getString("boardid");
                     txt[1] = jo.getString("user_email");
                     txt[2] = jo.getString("title");
                     txt[3] = jo.getString("contents");
@@ -152,9 +209,7 @@ public class Board extends AppCompatActivity {
                     txt[6] = jo.getString("calendar");
                     txt[7] = jo.getString("time");
 
-                    Log.i("User_email"+i, txt[1]);
-
-                    rArray.add(new BoardContents(txt[0], txt[1], txt[2] , txt[3], txt[4], txt[5], txt[6], txt[7]));
+                    rArray.add(new BoardContents(txt[0], txt[1], txt[2], txt[3], txt[4], txt[5], txt[6], txt[7]));
                 }
                 mAdapter.notifyDataSetChanged();
             } catch (JSONException e) {
@@ -217,15 +272,12 @@ public class Board extends AppCompatActivity {
             return title;
         }
     }
+
     static class BoardContentsViewHolder {
-        TextView txBoardid;
         TextView txUser_email;
         TextView txTitle;
-        TextView txContents;
         TextView txPlayers;
-        TextView txTotal_players;
         TextView txCalendar;
-        TextView txTime;
     }
 
     public class BoardContentsAdapter extends ArrayAdapter<BoardContents> {
@@ -250,10 +302,14 @@ public class Board extends AppCompatActivity {
             } else {
                 holder = (BoardContentsViewHolder) convertView.getTag();
             }
-            holder.txTitle.setText("제목 : " + getItem(position).getTitle());
-            holder.txUser_email.setText("작성자 : " + getItem(position).getUser_email());
+            holder.txTitle.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/BMJUA.ttf"));
+            holder.txTitle.setText(getItem(position).getTitle());
+            holder.txUser_email.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/iloveyou.ttf"));
+            holder.txUser_email.setText(getItem(position).getUser_email());
+            holder.txPlayers.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/iloveyou.ttf"));
             holder.txPlayers.setText(getItem(position).getPlayers() + " / " + getItem(position).getTotal_players());
-            holder.txCalendar.setText("경기시간 : " + getItem(position).getCalendar());
+            holder.txCalendar.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/iloveyou.ttf"));
+            holder.txCalendar.setText(getItem(position).getCalendar());
 
             return convertView;
         }

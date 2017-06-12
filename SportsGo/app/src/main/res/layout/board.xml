@@ -1,53 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#EEEEEE"
-    >
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="writeBoard"
-            android:text="글쓰기" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onNew"
-            android:text="새로고침" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onQuit"
-            android:text="게시판종료" />
-
-        <TextView
-            android:id="@+id/testtxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <ScrollView
+    <ListView
+        android:id="@+id/listview1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:orientation="vertical">
+        android:layout_margin="10dp"
+        android:divider="#00000000"
+        android:dividerHeight="8dp">
 
-        <ListView
-            android:id="@+id/listview1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </ListView>
 
-        </ListView>
-    </ScrollView>
+    <android.support.design.widget.FloatingActionButton
 
-</LinearLayout>
+        android:id="@+id/fabCached"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="190dp"
+        android:layout_marginRight="20dp"
+        android:elevation="6dp"
+        android:src="@drawable/cached"
+        android:visibility="invisible"
+        fab:backgroundTint="@color/fabPressed"
+        fab:pressedTranslationZ="12dp" />
+
+    <android.support.design.widget.FloatingActionButton
+
+        android:id="@+id/fabWrite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="110dp"
+        android:layout_marginRight="20dp"
+        android:elevation="6dp"
+        android:src="@drawable/create"
+        android:visibility="invisible"
+        fab:backgroundTint="@color/fabPressed"
+        fab:pressedTranslationZ="12dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="20dp"
+        android:elevation="6dp"
+        android:src="@drawable/add_white"
+        fab:backgroundTint="@color/fabPrimary"
+        fab:pressedTranslationZ="12dp" />
+
+    <!--<com.melnykov.fab.FloatingActionButton-->
+    <!--android:id="@+id/fab"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|right"-->
+    <!--android:layout_margin="16dp"-->
+    <!--android:src="@drawable/add_black"-->
+    <!--fab:fab_colorNormal="@color/fabPrimary"-->
+    <!--fab:fab_colorPressed="@color/fabPressed"-->
+    <!--fab:fab_colorRipple="@color/fabRipple" />-->
+
+</FrameLayout>

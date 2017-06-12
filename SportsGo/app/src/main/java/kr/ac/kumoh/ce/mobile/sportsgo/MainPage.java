@@ -5,16 +5,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,10 +45,12 @@ import java.util.ArrayList;
  */
 public class MainPage extends Fragment {
     View rootView;
-    Button chk;
-    TextView tx1;
+    TextView tx1, tx2;
     int  flag = 0;
-    public MainPage() { }
+
+    final ArrayList itemSelected = new ArrayList();
+    private FloatingActionButton fabMainPage;
+
     private NMapContext mMapContext;
     private static final String CLIENT_ID = "uXlyvf1k4B27uW1FU0u2";// 애플리케이션 클라이언트 아이디 값
 
@@ -132,76 +135,62 @@ public class MainPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.mainpage_main, container, false);
         tx1 = (TextView)rootView.findViewById(R.id.textView1);
+        tx1.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/newTown.ttf"));
+        tx2 = (TextView)rootView.findViewById(R.id.textView2);
+        tx2.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/newTown.ttf"));
 
-        Button btn = (Button)rootView.findViewById(R.id.btnboard);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), Board.class);
-                startActivity(intent);
-            }
-        });
-        Button b = (Button)rootView.findViewById(R.id.bt);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), Board.class);
-                startActivity(intent);
-
-            }
-        });
-        chk = (Button)rootView.findViewById(R.id.btnchk);
-        final ArrayList itemSelected = new ArrayList();
-
-//        dialog = builder.create();
- //       dialog.show();
-        chk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String[] items = {"축구", "농구", "풋살", "배드민턴"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-             //   dialog = new Dialog(getContext());
-                builder.setTitle("종목을 선택하세요")
-                .setMultiChoiceItems(items, null,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                tx1.setText("");
-                                    if (isChecked) {
-                                        if(itemSelected.size() > 2) {
-                                            Toast.makeText(getContext(), "최대 3개가지 선택가능합니다.", Toast.LENGTH_SHORT).show();
-                                            ((AlertDialog)dialog).getListView().setItemChecked(which, false);
-                                        }
-                                        else
-                                            itemSelected.add(which);
-                                    }
-                                    else if (itemSelected.contains(which))
-                                        itemSelected.remove(Integer.valueOf(which));
-                            }
-                        })
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                for(int i=0; i<itemSelected.size(); i++)
-                                    tx1.setText(tx1.getText() + "   " + items[(Integer) itemSelected.get(i)]);
-                                POIdataOverlay(itemSelected);
-                                itemSelected.clear();
-                            }
-                        })
-                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                itemSelected.clear();
-                            }
-                        });
-                builder.create();
-                builder.show();
-            }
-        });
+        fabMainPage = (FloatingActionButton)rootView.findViewById(R.id.fabMainpage);
+        fabMainPage.setOnClickListener(clickListener);
 
         return rootView;
     }
+    View.OnClickListener clickListener = new View.OnClickListener() {
 
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fabMainpage:
+                    final String[] items = {"축구", "농구", "풋살", "배드민턴"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("종목을 선택하세요")
+                            .setMultiChoiceItems(items, null,
+                                    new DialogInterface.OnMultiChoiceClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                            tx1.setText("");
+                                            if (isChecked) {
+                                                if(itemSelected.size() > 2) {
+                                                    Toast.makeText(getContext(), "최대 3개가지 선택가능합니다.", Toast.LENGTH_SHORT).show();
+                                                    ((AlertDialog)dialog).getListView().setItemChecked(which, false);
+                                                }
+                                                else
+                                                    itemSelected.add(which);
+                                            }
+                                            else if (itemSelected.contains(which))
+                                                itemSelected.remove(Integer.valueOf(which));
+                                        }
+                                    })
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    for(int i=0; i<itemSelected.size(); i++)
+                                        tx1.setText(tx1.getText() + "   " + items[(Integer) itemSelected.get(i)]);
+                                    POIdataOverlay(itemSelected);
+                                    itemSelected.clear();
+                                }
+                            })
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    itemSelected.clear();
+                                }
+                            });
+                    builder.create();
+                    builder.show();
+                    break;
+            }
+        }
+    };
     int A[] = {6, 5, 5, 6}; // 종목별 마커수
     double sport[][][] = { // 종목별 경도위도 좌표
             {
@@ -308,7 +297,6 @@ public class MainPage extends Fragment {
                     "010-7749-3321",
                     "010-3005-6256"
             },
-
     };
     private void POIdataOverlay(ArrayList itemSelected) {
         mOverlayManager.clearOverlays();
@@ -327,7 +315,6 @@ public class MainPage extends Fragment {
         for(int i=0; i<itemSelected.size(); i++) {
             for(int j=0; j<A[(Integer) itemSelected.get(i)]; j++) {
                 poiData.addPOIitem(sport[(Integer) itemSelected.get(i)][j][0], sport[(Integer) itemSelected.get(i)][j][1], Ssport1[(Integer) itemSelected.get(i)][j], markerId[i], 0);
-                //Log.i("@@@markerId", "" + markerId);
             }
         }
         poiData.endPOIdata();
@@ -597,6 +584,7 @@ public class MainPage extends Fragment {
             String m_title =  item.getTitle();
             String m_address = "";
             String m_call = "";
+            String m_point="";
             if ( markerId == NMapPOIflagType.PIN) {
                 markerId = 0;
             }
@@ -613,6 +601,7 @@ public class MainPage extends Fragment {
                 if ( m_title == Ssport1[markerId][i]) {
                     m_address = Address[markerId][i];
                     m_call = Call[markerId][i];
+                    m_point = "" + sport[markerId][i][0] + ", " + sport[markerId][i][1];
                 }
             }
 
@@ -620,6 +609,7 @@ public class MainPage extends Fragment {
             intent.putExtra("title", m_title); // 여기서 상세정보 보내주면 됨
             intent.putExtra("address", m_address);
             intent.putExtra("call" , m_call);
+            intent.putExtra("point", m_point);
             startActivityForResult(intent, 1);
 
             // [[TEMP]] handle a click event of the callout

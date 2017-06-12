@@ -1,13 +1,16 @@
 package kr.ac.kumoh.ce.mobile.sportsgo;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -18,60 +21,108 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by dlgus on 2017-05-16.
  */
 public class WriteBoard extends Activity {
-    String memo,title,total,cal;
-    EditText writetitleedt;
-    EditText writecontentedt;
-    EditText writetotlaedt;
-    EditText writecaledt;
+    String memo,title,total, playplan, stadiuminfo;
+    EditText writetitleedt, writecontentedt, writetotlaedt;
+    TextView mTxDate, mTxTime;
 
+    int mYear, mMonth, mDay, mHour, mMinute;
     PostDB pdb = new PostDB();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.writeboard);
 
+        Intent stadiuminfointent = getIntent();
+        stadiuminfo= stadiuminfointent.getStringExtra("stadiuminfo");
+
         writetitleedt = (EditText)findViewById(R.id.writetitleeedt);
         writecontentedt = (EditText)findViewById(R.id.writecontentedt);
         writetotlaedt = (EditText)findViewById(R.id.writetotlaedt);
-        writecaledt = (EditText)findViewById(R.id.writecaledt);
+
+        mTxDate = (TextView)findViewById(R.id.setDate);
+        mTxTime = (TextView)findViewById(R.id.setTime);
+        Calendar cal = new GregorianCalendar();
+        mYear = cal.get(Calendar.YEAR);
+        mMonth = cal.get(Calendar.MONTH);
+        mDay = cal.get(Calendar.DAY_OF_MONTH);
+        mHour = cal.get(Calendar.HOUR_OF_DAY);
+        mMinute = cal.get(Calendar.MINUTE);
+
     }
+
+    public void mOnClick(View v) {
+        switch (v.getId()) {
+            case R.id.InputDate:
+                new DatePickerDialog(WriteBoard.this, mDateSetListener, mYear, mMonth, mDay).show();
+                break;
+            case R.id.InputHour:
+                new TimePickerDialog(WriteBoard.this, mTimeSetListener, mHour, mMinute, false).show();
+                break;
+        }
+    }
+
+    DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    mYear = year;
+                    mMonth = monthOfYear;
+                    mDay= dayOfMonth;
+                    mTxDate.setText(String.format("%d-%d-%d", mYear, mMonth+1, mDay));
+                }
+            };
+
+    TimePickerDialog.OnTimeSetListener mTimeSetListener =
+            new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    mHour = hourOfDay;
+                    mMinute = minute;
+
+                    if(mHour > 12)
+                        mTxTime.setText(String.format("PM %d:%d", mHour-12, mMinute));
+                    else
+                        mTxTime.setText(String.format("AM %d:%d", mHour, mMinute));
+                }
+            };
 
     public void onCancel(View v){
         Intent intent = new Intent(this,Board.class);
         startActivity(intent);
-
         finish();
     }
 
     public void onEntry(View v){
         Intent intent = new Intent(this, Board.class);
+        intent.putExtra("stadiuminfo",stadiuminfo);
 
         title = writetitleedt.getText().toString();
         memo =writecontentedt.getText().toString();
         total = writetotlaedt.getText().toString();
-        cal = writecaledt.getText().toString();
+        playplan =""+mYear+ "-" + mMonth + "-" + mDay + " "+ mTxTime.getText();
         pdb.execute();
 
         startActivity(intent);
-
         finish();
     }
 
     public class PostDB extends AsyncTask<Void, Integer, Void> {
         String data = "";
+
         @Override
         protected Void doInBackground(Void... unused) {
 
-    /* 인풋 파라메터값 생성 */
             String param = "user_email=" + SignIn.Email + "&title=" + title + "&memo=" +memo +
-                    "&total="+ total + "&cal="+ cal + "";
+                    "&total="+ total + "&cal="+ playplan + "&stadiuminfo="+ stadiuminfo+"";
             try {
-    /* 서버연결 */
                 URL url = new URL(
                         "http://shid1020.dothome.co.kr/writeboard.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -80,13 +131,11 @@ public class WriteBoard extends Activity {
                 conn.setDoInput(true);
                 conn.connect();
 
-    /* 안드로이드 -> 서버 파라메터값 전달 */
                 OutputStream outs = conn.getOutputStream();
                 outs.write(param.getBytes("UTF-8"));
                 outs.flush();
                 outs.close();
 
-    /* 서버 -> 안드로이드 파라메터값 전달 */
                 InputStream is = null;
                 BufferedReader in = null;
 
@@ -100,16 +149,7 @@ public class WriteBoard extends Activity {
                     buff.append(line + "\n");
                 }
                 data = buff.toString().trim();
-                Log.e("RECV DATA",data);
 
-                //서버에서 응답확인
-                if(data.equals("0"))
-                {
-                    Log.e("RESULT","성공적으로 처리되었습니다");
-                }
-                else{
-                    Log.e("RESULT","에러 발생!"+data);
-                }
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -123,16 +163,10 @@ public class WriteBoard extends Activity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-             /* 서버에서 응답 */
-            Log.e("RECV DATA",data);
-            AlertDialog.Builder dialog = new AlertDialog.Builder(WriteBoard.this);
-
             if(data.equals("0"))
-                Toast.makeText(getApplicationContext(), "성공성공 글성공", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "글쓰기 성공하였습니다.", Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(getApplicationContext(), "실패실패 글실패", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "글쓰기 실패하였습니다.", Toast.LENGTH_SHORT).show();
         }
-
     }
-
 }

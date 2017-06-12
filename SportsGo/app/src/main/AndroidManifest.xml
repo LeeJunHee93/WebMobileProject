@@ -25,12 +25,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Board"/>
-        <activity android:name=".Boardreply"/>
-        <activity android:name=".SignIn"/>
+        <activity
+            android:name=".Board"
+            android:label="@string/Board" />
+        <activity
+            android:name=".Boardreply"
+            android:label="@string/Boardreply"/>
+        <activity android:name=".MyBoardreply"
+            android:label="내가 쓴 글"/>
+        <activity android:name=".Mypost"
+            android:label="내가 쓴 게시글 목록"/>
+
+        <activity android:name=".SignIn" />
         <activity android:name=".SignUp"/>
-        <activity android:name=".WriteBoard"/>
-        <activity android:name=".PopupActivity" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".WriteBoard"
+            android:label="@string/WriteBoard" />
+        <activity
+            android:name=".PopupActivity"
+            android:theme="@android:style/Theme.Dialog" />
 
     </application>
 

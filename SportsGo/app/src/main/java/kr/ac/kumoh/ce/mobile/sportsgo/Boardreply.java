@@ -4,17 +4,20 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,55 +37,74 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Boardreply extends AppCompatActivity {
-    ArrayList<MainActivity.ListItem> listItem = new ArrayList<MainActivity.ListItem>();
-    watchcommentDB cdb ;
+    watchcommentDB cdb;
     commentpostDB comdb;
     search_EntrylistDB sedb;
 
-    TextView titletxt,contenttxt,timetxt,writertxt,detail;
     EditText commentEdt;
     String Edt;
-    Intent infointent;
-    String[] info;
+    String [] info;
+    String checkjoin = null;
+    String backinfo, stadiuminfo;
     Button join;
-    int jsonSize = 0;
-    String checkjoin=null;
-
+    ScrollView sv;
     protected ArrayList<BoardreplyContents> rArray = new ArrayList<BoardreplyContents>();
     protected ListView mList;
     protected BoardContentsAdapter mAdapter;
+    int jsonSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.boardreply);
+        View Footer = getLayoutInflater().inflate(R.layout.replyll, null, false);
+        sv = (ScrollView) findViewById(R.id.replyscroll);
 
-        join = (Button)findViewById(R.id.join);
-        infointent = getIntent();
+        join = (Button) findViewById(R.id.join);
+        Intent infointent = getIntent();
         info = infointent.getStringArrayExtra("info");
+        backinfo = infointent.getStringExtra("backinfo");
+        stadiuminfo = infointent.getStringExtra("stadiuminfo");
+        TextView titletxt, contenttxt, timetxt, writertxt, people, play_timetxt;
 
-        titletxt = (TextView)findViewById(R.id.titletxt);
+        titletxt = (TextView) findViewById(R.id.titletxt);
+        titletxt.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/BMJUA.ttf"));
         titletxt.setText(info[2]);
 
-        writertxt = (TextView)findViewById(R.id.writertxt);
-        writertxt.setText(" 작성자 :"+ info[1]);
+        writertxt = (TextView) findViewById(R.id.writertxt);
+        writertxt.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/iloveyou.ttf"));
+        writertxt.setText(" 작성자 : " + info[1]);
 
-        contenttxt = (TextView)findViewById(R.id.contenttxt);
+        contenttxt = (TextView) findViewById(R.id.contenttxt);
+        contenttxt.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/newTown.ttf"));
         contenttxt.setText(info[3]);
 
-        detail =(TextView)findViewById(R.id.detail);
-        detail.setText("게시판아이디"+info[0]+", 현재인원:"+" "+info[4]+", 모집인원: "+info[5]+", 경기일정"+info[6]);
+        people = (TextView) findViewById(R.id.join_people);
+        people.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/iloveyou.ttf"));
+        people.setText("인원 : " + info[4] + " / " + info[5]);
 
-        timetxt = (TextView)findViewById(R.id.timetxt);
+        play_timetxt = (TextView) findViewById(R.id.playtime);
+        play_timetxt.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/iloveyou.ttf"));
+        play_timetxt.setText("경기일정 : " + info[6]);
+
+        timetxt = (TextView) findViewById(R.id.timetxt);
         timetxt.setText(info[7]);
 
-        commentEdt = (EditText)findViewById(R.id.commentEdt);
+        commentEdt = (EditText) Footer.findViewById(R.id.commentEdt);
 
         rArray = new ArrayList<BoardreplyContents>();
+        mList = (ListView) findViewById(R.id.listview2);
         mAdapter = new BoardContentsAdapter(this, R.layout.listitem2, rArray);
-        mList = (ListView)findViewById(R.id.listview2);
-        mList.setAdapter(mAdapter);
 
+        mList.addFooterView(Footer);
+        mList.setAdapter(mAdapter);
+        mList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                sv.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         sedb = new search_EntrylistDB();
         sedb.execute();
 
@@ -91,26 +113,112 @@ public class Boardreply extends AppCompatActivity {
 
     }
 
-    //댓글 등록 버튼
-    public void onCommentEntry(View v){
+    @Override
+    public void onBackPressed() {
+        if (backinfo.equals("0")) {
+            Intent intent = new Intent(this, Board.class);
+            intent.putExtra("stadiuminfo", stadiuminfo);
+            startActivity(intent);
+            super.onBackPressed();
+        } else if (backinfo.equals("1")) {
+            Log.i("백인포", "들어옴");
+            super.onBackPressed();
+        }
+    }
+
+    public void onCommentEntry(View v) {
 
         Edt = commentEdt.getText().toString();
         comdb = new commentpostDB();
         comdb.execute();
-
-        //새로고침
-        Intent intent = new Intent(getApplicationContext(), Boardreply.class);
-        intent.putExtra("info", info);
-        startActivity(intent);
-        finish();
-
-    }
-    //참가 버튼
-    public void join(View v){
-        addMemberDB adb = new addMemberDB();
-        adb.execute();
     }
 
+    public void delete_post(View v) {
+        deletepostDB ddba = new deletepostDB();
+        ddba.execute();
+    }
+
+    public void join(View v) {
+        if (Integer.parseInt(info[4]) < Integer.parseInt(info[5])) {
+            addMemberDB adb = new addMemberDB();
+            adb.execute();
+        } else
+            Toast.makeText(getApplicationContext(), "최대 인원수를 초과하였습니다.", Toast.LENGTH_SHORT).show();
+    }
+
+    public class watchRefreshDB extends AsyncTask<String, Integer, String> {
+        String param = "boardid=" + info[0] + "";
+        String[] txt = new String[8];
+        String[] reinfo;
+
+        @Override
+        protected String doInBackground(String... unused) {
+            StringBuilder jsonHtml = new StringBuilder();
+
+            try {
+                URL url = new URL("http://shid1020.dothome.co.kr/boardrefresh.php");
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.connect();
+
+                OutputStream outs = conn.getOutputStream();
+                outs.write(param.getBytes("UTF-8"));
+                outs.flush();
+                outs.close();
+
+                InputStream is = null;
+                is = conn.getInputStream();
+
+                String line = null;
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                for (; ; ) {
+                    line = in.readLine();
+                    if (line == null) break;
+                    jsonHtml.append(line + "\n");
+                }
+                in.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return jsonHtml.toString();
+        }
+
+        protected void onPostExecute(String str) {
+            try {
+                JSONObject root = new JSONObject(str);
+                JSONArray ja = root.getJSONArray("results");
+
+                for (int i = 0; i < 1; i++) {
+                    JSONObject jo = ja.getJSONObject(i);
+
+                    txt[0] = jo.getString("boardid");
+                    txt[1] = jo.getString("user_email");
+                    txt[2] = jo.getString("title");
+                    txt[3] = jo.getString("contents");
+                    txt[4] = jo.getString("playesr");
+                    txt[5] = jo.getString("total_players");
+                    txt[6] = jo.getString("calendar");
+                    txt[7] = jo.getString("time");
+
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            reinfo = new String[]{txt[0], txt[1], txt[2], txt[3], txt[4], txt[5], txt[6], txt[7]};
+            Intent intent = new Intent(getApplicationContext(), Boardreply.class);
+            intent.putExtra("info", reinfo);
+            intent.putExtra("stadiuminfo", stadiuminfo);
+            intent.putExtra("backinfo", backinfo);
+            startActivity(intent);
+            finish();
+
+
+        }
+    }
 
     public class watchcommentDB extends AsyncTask<String, Integer, String> {
         String param = "boardid=" + info[0] + "";
@@ -157,7 +265,7 @@ public class Boardreply extends AppCompatActivity {
 
         protected void onPostExecute(String str) {
             //서버에서 json값 받아오기
-            String [] txt;
+            String[] txt;
             try {
                 JSONObject root = new JSONObject(str);
                 JSONArray ja = root.getJSONArray("results");
@@ -172,7 +280,7 @@ public class Boardreply extends AppCompatActivity {
                     txt[3] = jo.getString("memo");
                     txt[4] = jo.getString("time");
 
-                    rArray.add(new BoardreplyContents(txt[0], txt[1], txt[2] , txt[3], txt[4]));
+                    rArray.add(new BoardreplyContents(txt[0], txt[1], txt[2], txt[3], txt[4]));
                 }
                 mAdapter.notifyDataSetChanged();
             } catch (JSONException e) {
@@ -181,6 +289,7 @@ public class Boardreply extends AppCompatActivity {
 
         }
     }
+
     public class BoardreplyContents {
         String commentid;
         String boardid;
@@ -211,6 +320,7 @@ public class Boardreply extends AppCompatActivity {
         }
 
     }
+
     static class BoardreplyContentsViewHolder {
         TextView txUser_email;
         TextView txMemo;
@@ -238,7 +348,9 @@ public class Boardreply extends AppCompatActivity {
             } else {
                 holder = (BoardreplyContentsViewHolder) convertView.getTag();
             }
+            holder.txUser_email.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/iloveyou.ttf"));
             holder.txUser_email.setText(getItem(position).getUser_email());
+            holder.txMemo.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/newTown.ttf"));
             holder.txMemo.setText(getItem(position).getMemo());
             holder.txTime.setText(getItem(position).getTime());
 
@@ -251,11 +363,9 @@ public class Boardreply extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... unused) {
-    /* 인풋 파라메터값 생성 */
-            String param = "boardid="+ info[0]+ "&user_email=" + SignIn.Email + "&memo=" + Edt;
+            String param = "boardid=" + info[0] + "&user_email=" + SignIn.Email + "&memo=" + Edt;
 
             try {
-    /* 서버연결 */
                 URL url = new URL("http://shid1020.dothome.co.kr/writecomment.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -263,13 +373,11 @@ public class Boardreply extends AppCompatActivity {
                 conn.setDoInput(true);
                 conn.connect();
 
-    /* 안드로이드 -> 서버 파라메터값 전달 */
                 OutputStream outs = conn.getOutputStream();
                 outs.write(param.getBytes("UTF-8"));
                 outs.flush();
                 outs.close();
 
-    /* 서버 -> 안드로이드 파라메터값 전달 */
                 InputStream is = null;
                 BufferedReader in = null;
 
@@ -277,18 +385,10 @@ public class Boardreply extends AppCompatActivity {
                 in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
                 String line = null;
                 StringBuffer buff = new StringBuffer();
-                while ( ( line = in.readLine() ) != null ) {
+                while ((line = in.readLine()) != null) {
                     buff.append(line + "\n");
                 }
                 data = buff.toString().trim();
-                Log.e("RECV DATA",data);
-                //서버에서 응답확인
-                if(data.equals("0")) {
-                    Log.e("RESULT","성공적으로 처리되었습니다");
-                }
-                else {
-                    Log.e("RESULT","에러 발생!"+data);
-                }
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -301,19 +401,14 @@ public class Boardreply extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-             /* 서버에서 응답 */
-            Log.e("RECV DATA",data);
             AlertDialog.Builder dialog = new AlertDialog.Builder(Boardreply.this);
-            if(data.equals("0"))
-            {
-                Log.e("RESULT","성공적으로 처리되었습니다!");
-                Toast.makeText(getApplicationContext(),"댓글 등록에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+            if (data.equals("0")) {
+                Toast.makeText(getApplicationContext(), "댓글 등록에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "댓글 등록에 실패하였습니다.", Toast.LENGTH_SHORT).show();
             }
-            else
-            {
-                Log.e("RESULT","글 등록에 실패하였습니다!"+data);
-                Toast.makeText(getApplicationContext(),"댓글 등록에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-            }
+            watchRefreshDB refreshDB = new watchRefreshDB();
+            refreshDB.execute();
         }
     }
 
@@ -323,7 +418,7 @@ public class Boardreply extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... unused) {
     /* 인풋 파라메터값 생성 */
-            String param = "boardid="+ info[0]+ "&user_email=" + SignIn.Email;
+            String param = "boardid=" + info[0] + "&user_email=" + SignIn.Email;
 
             try {
     /* 서버연결 */
@@ -348,18 +443,14 @@ public class Boardreply extends AppCompatActivity {
                 in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
                 String line = null;
                 StringBuffer buff = new StringBuffer();
-                while ( ( line = in.readLine() ) != null ) {
+                while ((line = in.readLine()) != null) {
                     buff.append(line + "\n");
                 }
                 data = buff.toString().trim();
-                Log.e("RECV DATA",data);
                 //서버에서 응답확인
-                if(data.equals("1")) {
-                    Log.e("RESULT","참가 되어있습니다.");
+                if (data.equals("1")) {
                     checkjoin = "참가취소";
-                }
-                else if(data.equals("0")) {
-                    Log.e("RESULT","참가되어 있지 않습니다.");
+                } else if (data.equals("0")) {
                     checkjoin = "참가";
                 }
 
@@ -374,29 +465,18 @@ public class Boardreply extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-             /* 서버에서 응답 */
-            Log.e("RECV DATA",data);
-            if(data.equals("1"))
-            {
-                Log.e("RESULT","참가 되어있습니다");
-            }
-            else
-            {
-                Log.e("RESULT","참가되어있지 않습니다!"+data);
-            }
-            join.setText(""+checkjoin);
+            join.setText("" + checkjoin);
         }
     }
+
     public class addMemberDB extends AsyncTask<Void, Integer, Void> {
         String data = "";
 
         @Override
         protected Void doInBackground(Void... unused) {
-    /* 인풋 파라메터값 생성 */
-            String param = "boardid="+ info[0]+ "&user_email=" + SignIn.Email + "&checkjoin=" + checkjoin;
+            String param = "boardid=" + info[0] + "&user_email=" + SignIn.Email + "&checkjoin=" + checkjoin;
 
             try {
-    /* 서버연결 */
                 URL url = new URL("http://shid1020.dothome.co.kr/addmember.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -404,13 +484,11 @@ public class Boardreply extends AppCompatActivity {
                 conn.setDoInput(true);
                 conn.connect();
 
-    /* 안드로이드 -> 서버 파라메터값 전달 */
                 OutputStream outs = conn.getOutputStream();
                 outs.write(param.getBytes("UTF-8"));
                 outs.flush();
                 outs.close();
 
-    /* 서버 -> 안드로이드 파라메터값 전달 */
                 InputStream is = null;
                 BufferedReader in = null;
 
@@ -418,18 +496,10 @@ public class Boardreply extends AppCompatActivity {
                 in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
                 String line = null;
                 StringBuffer buff = new StringBuffer();
-                while ( ( line = in.readLine() ) != null ) {
+                while ((line = in.readLine()) != null) {
                     buff.append(line + "\n");
                 }
                 data = buff.toString().trim();
-                Log.e("RECV DATA",data);
-                //서버에서 응답확인
-                if(data.equals("0")) {
-                    Log.e("RESULT","정상 처리되었습니다");
-                }
-                else if(data.equals("1")) {
-                    Log.e("RESULT","오류발생."+data);
-                }
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -443,32 +513,23 @@ public class Boardreply extends AppCompatActivity {
             super.onPostExecute(aVoid);
 
             /* 서버에서 응답 */
-            Log.e("RECV DATA",data);
             AlertDialog.Builder dialog = new AlertDialog.Builder(Boardreply.this);
-            if(data.equals("0"))
-            {
-                Log.e("RESULT","성공적으로 처리되었습니다!");
+            if (data.equals("0")) {
                 dialog.setTitle("알림")
                         .setMessage("성공적으로 처리되었습니다!")
                         .setCancelable(true)
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //새로고침
-                                Intent intent = new Intent(getApplicationContext(), Board.class);
-                                // intent.putExtra("info", info);
-                                startActivity(intent);
-                                finish();
+                                watchRefreshDB refresh = new watchRefreshDB();
+                                refresh.execute();
                             }
                         });
                 dialog.show();
-            }
-            else if(data.equals("1"))
-            {
-                Log.e("RESULT","오류발생"+data);
+            } else if (data.equals("1")) {
                 dialog
                         .setTitle("알림")
-                        .setMessage("오류발생"+data)
+                        .setMessage("오류발생" + data)
                         .setCancelable(true)
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
@@ -482,7 +543,83 @@ public class Boardreply extends AppCompatActivity {
         }
     }
 
-    public void onReturn(View v){
+    public class deletepostDB extends AsyncTask<Void, Integer, Void> {
+        String data = "";
+
+        @Override
+        protected Void doInBackground(Void... unused) {
+            String param = "boardid=" + info[0] + "";
+
+            try {
+                URL url = new URL("http://shid1020.dothome.co.kr/deletepost.php");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.connect();
+
+                OutputStream outs = conn.getOutputStream();
+                outs.write(param.getBytes("UTF-8"));
+                outs.flush();
+                outs.close();
+
+                InputStream is = null;
+                BufferedReader in = null;
+
+                is = conn.getInputStream();
+                in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
+                String line = null;
+                StringBuffer buff = new StringBuffer();
+                while ((line = in.readLine()) != null) {
+                    buff.append(line + "\n");
+                }
+                data = buff.toString().trim();
+                Log.e("RECV DATA", data);
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            /* 서버에서 응답 */
+            AlertDialog.Builder dialog = new AlertDialog.Builder(Boardreply.this);
+            if (data.equals("0")) {
+                Log.e("RESULT", "성공적으로 처리되었습니다!");
+                dialog.setTitle("알림")
+                        .setMessage("성공적으로 처리되었습니다!")
+                        .setCancelable(true)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                dialog.show();
+            } else if (data.equals("1")) {
+                dialog
+                        .setTitle("알림")
+                        .setMessage("오류발생" + data)
+                        .setCancelable(true)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                dialog.show();
+            }
+        }
+    }
+
+    public void onReturn(View v) {
         finish();
     }
+
+
 }
